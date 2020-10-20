@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,18 +31,24 @@ namespace Lift
 
         public void Tick()
         {
-            if (Calls.Any())
-            {
-                Lifts[0].CalledFloor = Calls[0].Floor;
+            var closetToCallLift = Lifts.OrderBy(l => Math.Abs(l.Floor - Calls[0].Floor));
+            var closestToCallLift = Lifts.OrderBy(l => Math.Abs(l.Floor - Calls[0].Floor)).First();
+            closestToCallLift.CalledFloor = Calls[0].Floor;
+
+            foreach (Lift lift in Lifts) {
+           
+                lift.Tick();
+                
+                if (Calls.Any(x => x.Floor == lift.Floor) && lift.DoorsOpen) {
+                    Calls.Remove(Calls.Where(x => x.Floor == lift.Floor).First());
+                }
+
+                //Lifts[0].Requests.AddRange(Calls.Select(c => (c.Floor, true)).ToList());
+
+                // I am extending info that goes to the Lift class
+
+                // Calls contain info about LiftSystem
             }
-
-            Lifts[0].Tick();
-
-            //Lifts[0].Requests.AddRange(Calls.Select(c => (c.Floor, true)).ToList());
-
-            // I am extending info that goes to the Lift class
-
-            // Calls contain info about LiftSystem
         }
 
         public void Call(List<Call> calls)

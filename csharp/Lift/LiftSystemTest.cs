@@ -34,7 +34,7 @@ namespace Lift
 
         [Fact]
         [UseReporter(typeof(DiffReporter))]
-        public void IfCurrentFloorHasACallAndDoorsClosed_OpensDoors()
+        public void IfCurrentFloorHasACallAndDoorsClosed_OpensDoorsAndClearsCall()
         {
             var liftA = new Lift("A", 0, new List<int> { }, false);
             var lifts = new LiftSystem(new List<int>() { 0, 1, 2, 3 }, new List<Lift> { liftA }, new List<Call> { new Call(0, Direction.Up) });
@@ -141,6 +141,19 @@ namespace Lift
         {
             var liftA = new Lift("A", 0, new List<int> { }, false);
             var lifts = new LiftSystem(new List<int>() { 0, 1, 2, 3 }, new List<Lift> { liftA }, new List<Call> { new Call(1, Direction.Up) });
+
+            lifts.Tick();
+
+            Approvals.Verify(new LiftSystemPrinter().Print(lifts));
+        }
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void TwoLiftsInSystem_IfThereIsCall_MoveTheClosestLift()
+        {
+            var liftA = new Lift("A", 3, new List<int> { }, false);
+            var liftB = new Lift("B", 0, new List<int> { }, false);
+            var lifts = new LiftSystem(new List<int>() { 0, 1, 2, 3 }, new List<Lift> { liftA, liftB }, new List<Call> { new Call(1, Direction.Up) });
 
             lifts.Tick();
 

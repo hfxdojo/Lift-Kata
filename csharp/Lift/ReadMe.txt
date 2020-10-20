@@ -3,8 +3,10 @@
 Lift features:
 
 [X] A lift fulfills a request when it moves to the requested floor and opens the doors.
-[ ] A lift fulfills a call when it moves to the correct floor, is about to go in the called direction,
+[X] A lift fulfills a call when it moves to the correct floor, is about to go in the called direction,
     and opens the doors.
+    - We made the decision that we won't try to implement an elevator *direction* at this time
+    - Although that could be an interesting future direction
 [X] A lift can only move between floors if the doors are closed.
 
 ## As of 2020-09-28 -- Last things we did:
@@ -13,6 +15,14 @@ Lift features:
 - Convert calls to requests for one lift in the system.
 - Make sure when calls come in, the LiftSystemPrinter doesn't end up printing them
     as requests
+
+## As of 2020-10-19 -- What we did:
+- Got the single lift running
+- Started on multiple lifts
+- GOAL: wrap it up next session!
+    - Try to solve for multiple lifts in simplest way possible
+    - Probably: sending call to first lift available instead of ordering by closest?
+
 
 Questions:
 - Who should be responsible for tracking Calls? LiftSystem or Lift?
