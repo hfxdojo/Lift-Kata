@@ -31,23 +31,19 @@ namespace Lift
 
         public void Tick()
         {
-            var closetToCallLift = Lifts.OrderBy(l => Math.Abs(l.Floor - Calls[0].Floor));
-            var closestToCallLift = Lifts.OrderBy(l => Math.Abs(l.Floor - Calls[0].Floor)).First();
-            closestToCallLift.CalledFloor = Calls[0].Floor;
+            int callIndex=0;
 
             foreach (Lift lift in Lifts) {
-           
+                
+                if(Calls.Any() && callIndex < Calls.Count())
+                    lift.CalledFloor = Calls[callIndex++].Floor;
+
+
                 lift.Tick();
                 
                 if (Calls.Any(x => x.Floor == lift.Floor) && lift.DoorsOpen) {
                     Calls.Remove(Calls.Where(x => x.Floor == lift.Floor).First());
                 }
-
-                //Lifts[0].Requests.AddRange(Calls.Select(c => (c.Floor, true)).ToList());
-
-                // I am extending info that goes to the Lift class
-
-                // Calls contain info about LiftSystem
             }
         }
 

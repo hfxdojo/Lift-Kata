@@ -23,6 +23,39 @@ Lift features:
     - Try to solve for multiple lifts in simplest way possible
     - Probably: sending call to first lift available instead of ordering by closest?
 
+## As of 2020-10-26 -- what we did:
+- we added a test scenario with 2 lifts and 3 calls and we called 2 ticks. 
+
+3 v           3
+2 ^           2
+1 v        [B]1
+0     [A]     0
+
+the first tick() works as expected
+
+3 v        [B]3
+2 ^           2
+1 v   [A]     1
+0             0
+
+after the second tick() this is what we expect to see:
+
+3          ]B[3
+2 ^           2
+1     ]A[     1
+0             0
+
+But instead this happens:
+
+3 v           3
+2 ^        [B]2
+1     ]A[     1
+0             0
+
+It looks like the call assignment is the problem. after the first tick 2 calls are assigned and lifts are moved to the floors but still 
+the 2 calls are still in the call list. They are going to be removed only after doors are opened.
+
+
 
 Questions:
 - Who should be responsible for tracking Calls? LiftSystem or Lift?

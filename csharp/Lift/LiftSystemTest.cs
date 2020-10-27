@@ -7,10 +7,9 @@ namespace Lift
 {
     public class LiftSystemTest
     {
-        // TODO: enable this test and finish writing it
         [Fact]
         [UseReporter(typeof(DiffReporter))]
-        public void NoCall_StaysTheSame()
+        public void IfNoCallOrRequest_NoChangeToState()
         {
             var liftA = new Lift("A", 0);
             var lifts = new LiftSystem(new List<int>() { 0, 1, 2, 3 }, new List<Lift> { liftA }, new List<Call>());
@@ -149,12 +148,33 @@ namespace Lift
 
         [Fact]
         [UseReporter(typeof(DiffReporter))]
-        public void TwoLiftsInSystem_IfThereIsCall_MoveTheClosestLift()
+        public void TwoLiftsInSystem_IfThereIsCall_MoveTheFirstLiftInTheList()
         {
             var liftA = new Lift("A", 3, new List<int> { }, false);
             var liftB = new Lift("B", 0, new List<int> { }, false);
             var lifts = new LiftSystem(new List<int>() { 0, 1, 2, 3 }, new List<Lift> { liftA, liftB }, new List<Call> { new Call(1, Direction.Up) });
 
+            lifts.Tick();
+
+            Approvals.Verify(new LiftSystemPrinter().Print(lifts));
+        }
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void IfMoreCallsThanLifts_LastCallsGetProcessedEventually()
+        {
+            var liftA = new Lift("A", 0, new List<int> { }, false);
+            var liftB = new Lift("B", 1, new List<int> { }, false);
+
+            var callList = new List<Call> {
+                new Call(1, Direction.Down),
+                new Call(3, Direction.Down),
+                new Call(2, Direction.Up),
+            };
+
+            var lifts = new LiftSystem(new List<int>() { 0, 1, 2, 3 }, new List<Lift> { liftA, liftB }, callList);
+
+            lifts.Tick();
             lifts.Tick();
 
             Approvals.Verify(new LiftSystemPrinter().Print(lifts));
